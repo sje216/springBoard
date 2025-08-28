@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="DiffGenerationConfig">
-    <option name="snapshotDbValue" value="25f401fa-ddbe-440b-9cac-2d9a62aa753e" />
-    <option name="snapshotDirValue" value="$PROJECT_DIR$/src/main/resources/db" />
-  </component>
-</project>
