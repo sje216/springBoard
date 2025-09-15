@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor // 초기화 되지 않는 final 필드나 생성자 주입
 public class PostController {
@@ -28,6 +30,13 @@ public class PostController {
         postService.savePost(postRequest);
         System.out.println(postRequest.getId());
         return "redirect:/post/list.do";
+    }
+
+    @GetMapping("/post/list.do")
+    public String openPostList(Model model){
+        List<PostRespose> postList = postService.findAll();
+        model.addAttribute("postList", postList);
+        return "post/list";
     }
 
 
