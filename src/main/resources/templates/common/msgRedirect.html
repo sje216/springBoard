@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: main-head"></head>
+    <body>
+        <form th:if="${not #maps.isEmpty( msg.data )}" id="redirectForm" th:action="${msg.redirectUri}"
+        th:method="${msg.method}" style="display:none;">
+            <input type="hidden" th:each="key, status : ${msg.data.keySet()}" th:name="${key}" th:value="${msg.data.get(key)}" />
+        </form>
+
+    <script th:inline="javascript">
+
+        window.onload = function () {
+            const msg = [[${msg.message}]];
+            if(msg){
+                alert(msg);
+            }
+
+            const form = document.getElementById('redirectForm');
+            if(form){
+                form.submit();
+                return false;
+            }
+
+            const redirectUri = [[ ${msg.redirectUri} ]];
+            location.href = redirectUri;
+        }
+    </script>
+    </body>
+</html>

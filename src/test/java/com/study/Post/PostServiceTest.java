@@ -13,13 +13,17 @@ public class PostServiceTest {
     private PostService postService;
 
     @Test
-    void savePost() {
-        PostRequest postRequest = new PostRequest();
-        postRequest.setTitle("게시글 제목 Test");
-        postRequest.setContent("게시글 내용 Test");
-        postRequest.setWriter("Tester");
-        postRequest.setNoticeYn(false);
-        Long id = postService.savePost(postRequest);
-        System.out.println(id);
+    void saveBySearch() {
+        int num = 1000;
+        for (int i =0;i<num;i++) {
+            PostRequest postRequest = new PostRequest();
+            postRequest.setTitle( i +"번 게시글 제목 Test");
+            postRequest.setContent(i +"게시글 내용 Test");
+            postRequest.setWriter(i+"Tester");
+            postRequest.setNoticeYn(false);
+            Long id = postService.savePost(postRequest);
+            System.out.println(id);
+
+        }
     }
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.member.MemberMapper">
+    <sql id="memberColumns">
+        id
+        ,login_id
+        ,password
+        ,name
+        ,gender
+        ,birthday
+        ,delete_yn
+        ,created_date
+        ,modified_date
+    </sql>
+
+<!--    회원정보 저장 (회원가입)-->
+    <insert id="save" parameterType="com.study.domain.member.MemberRequest" keyProperty="id">
+        <selectKey keyProperty="id" resultType="long" order="BEFORE">
+            SELECT seq_tb_member.nextval
+            FROM dual
+        </selectKey>
+        INSERT INTO tb_member (
+        <include refid="memberColumns" />
+        ) VALUES (
+         #{id}
+        ,#{loginId}
+        ,#{password}
+        ,#{name}
+        ,#{gender}
+        ,#{birthday}
+        ,'N'
+        ,SYSDATE
+        ,NULL
+        )
+    </insert>
+
+<!--    회원정보 상세정보     -->
+    <select id="findByLoginId" parameterType="string" resultType="com.study.domain.member.MemberResponse">
+        SELECT 
+            <include refid="memberColumns" />
+        FROM
+            tb_member
+        WHERE
+            delete_yn = 'N'
+            AND 
+            login_id = #{loginId}
+    </select>
+
+<!--    회원정보 수정     -->
+    <update id="update" parameterType="com.study.domain.member.MemberRequest">
+        UPDATE tb_member
+            SET
+                modified_date = SYSDATE
+                ,name       = #{name}
+                ,gender     = #{gender}
+                ,birthday   = #{birthday}
+                <if test="password != null and password !@= ''">
+                ,password =  #{password}
+                </if>
+            WHERE
+                id = #{id}
+    </update>
+    
+<!--    회원정보 삭제     -->
+    <update id="deleteById" parameterType="long">
+    UPDATE tb_member
+        SET
+            delete_yn = 'Y'
+        WHERE
+            id = #{id}
+    </update>
+
+<!--    회원수     -->
+    <select id="cntByLoginId" parameterType="string" resultType="int">
+    SELECT
+        COUNT(*)
+    FROM
+        tb_member
+    WHERE
+        login_id = #{loginId}
+    </select>
+
+</mapper>

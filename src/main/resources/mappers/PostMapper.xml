@@ -67,23 +67,57 @@
     </delete>
 
 <!--    게시글 리스트 조회-->
-    <select id="findAll" resultType="com.study.domain.post.PostRespose">
+    <select id="findAll" parameterType="com.study.common.dto.SearchDto" resultType="com.study.domain.post.PostRespose">
         SELECT
             <include refid="postColumns" />
         FROM
             tb_post
         WHERE
             delete_yn = 0
+            <include refid="search" />
         ORDER BY
             id DESC
+        OFFSET #{pagination.offsetStart}
+            ROWS FETCH NEXT #{recordSize}
+            ROWS ONLY
     </select>
 
 <!--    게시글 카운트-->
-    <select id="cnt" resultType="int">
+    <select id="cnt" parameterType="com.study.common.dto.SearchDto" resultType="int">
         SELECT
             count(*)
         FROM tb_post
         WHERE
             delete_yn = 0
+            <include refid="search" />
     </select>
+
+<!--    게시글 검색-->
+    <sql id="search">
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType != null and searchType != ''">
+                    <choose>
+                        <when test="'title'.equals(searchType)">
+                            AND title LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="'content'.equals(searchType)">
+                            AND content LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="'writer'.equals(searchType)">
+                            AND writer LIKE '%' || #{keyword} || '%'
+                        </when>
+                    </choose>
+                </when>
+
+                <otherwise>
+                    AND (
+                        title LIKE '%' || #{keyword} || '%'
+                        OR title LIKE '%' || #{keyword} || '%'
+                        OR title LIKE '%' || #{keyword} || '%'
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
 </mapper>
